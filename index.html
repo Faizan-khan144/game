@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic-tac-toe</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #42564E;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .game {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5vmin;
+      width: 60vmin;
+      height: 60vmin;
+    }
+    .box {
+      width: 18vmin;
+      height: 18vmin;
+      border-radius: 16px;
+      border: none;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+      font-size: 8vmin;
+      color: white;
+      background-color: #5C6476;
+      cursor: pointer;
+    }
+    #re, #ne {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 1.5rem;
+      background-color: #443132;
+      color: white;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    #msg {
+      color: white;
+      font-size: 8vmin;
+    }
+    .msgcon {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 30px;
+    }
+    .msgcon.show {
+      display: flex;
+    }
+    @media (max-width: 500px) {
+      .game {
+        width: 90vmin;
+        height: 90vmin;
+      }
+      .box {
+        width: 28vmin;
+        height: 28vmin;
+        font-size: 10vmin;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="msgcon" id="msgcon">
+    <p id="msg">Winner</p>
+    <button id="ne">New Game</button>
+  </div>
+
+  <main>
+    <h1>Tic Tac Toe</h1>
+    <div class="container">
+      <div class="game">
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+      </div>
+    </div>
+    <button id="re">Reset Game</button>
+  </main>
+
+  <script>
+    const boxes = document.querySelectorAll(".box");
+    const resetBtn = document.querySelector("#re");
+    const newBtn = document.querySelector("#ne");
+    const msgCon = document.querySelector("#msgcon");
+    const msg = document.querySelector("#msg");
+
+    let turnO = true;
+
+    const winPattern = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+
+    function resetGame() {
+      turnO = true;
+      boxes.forEach(box => {
+        box.disabled = false;
+        box.innerText = "";
+      });
+      msgCon.classList.remove("show");
+    }
+
+    function showWinner(winner) {
+      msg.innerText = `🎉 Winner is ${winner}`;
+      msgCon.classList.add("show");
+      boxes.forEach(box => box.disabled = true);
+    }
+
+    function checkWinner() {
+      for (let pattern of winPattern) {
+        const [a, b, c] = pattern;
+        const val1 = boxes[a].innerText;
+        const val2 = boxes[b].innerText;
+        const val3 = boxes[c].innerText;
+        if (val1 && val1 === val2 && val2 === val3) {
+          showWinner(val1);
+          return;
+        }
+      }
+    }
+
+    boxes.forEach(box => {
+      box.addEventListener("click", () => {
+        if (box.innerText !== "") return;
+        box.innerText = turnO ? "O" : "X";
+        box.disabled = true;
+        checkWinner();
+        turnO = !turnO;
+      });
+    });
+
+    resetBtn.addEventListener("click", resetGame);
+    newBtn.addEventListener("click", resetGame);
+  </script>
+</body>
+</html>
